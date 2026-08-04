@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>야오의 홈 · 工作台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0F2E2B; --panel:#16403B; --raise:#1E514A; --line:rgba(243,236,221,.10);
+    --ink:#F3ECDD; --mut:#9DB8B1; --ko:#E9A83C; --en:#6FB8C4; --goal:#EA836B; --pur:#B79CE0;
+    --lat:"Space Grotesk",sans-serif;
+    --cjk:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC","Noto Sans KR",sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{background:var(--bg); color:var(--ink); font-family:var(--cjk); line-height:1.55; padding:20px 15px 60px; max-width:760px; margin:0 auto; -webkit-font-smoothing:antialiased}
+  h2.lead{font-family:var(--lat); font-size:11.5px; letter-spacing:.18em; text-transform:uppercase; color:var(--mut); margin:24px 0 12px; display:flex; align-items:center; gap:10px; font-weight:500}
+  h2.lead::after{content:""; flex:1; height:1px; background:var(--line)}
+  .hero{background:linear-gradient(160deg,var(--raise),var(--panel)); border:1px solid var(--line); border-radius:18px; padding:20px}
+  .hero .date{font-family:var(--lat); font-size:12px; color:var(--mut); letter-spacing:.1em}
+  .hero h1{font-size:22px; font-weight:700; margin:6px 0 2px}
+  .hero h1 b{color:var(--ko)}
+  .focus{margin-top:14px; display:flex; gap:12px; align-items:center; background:rgba(233,168,60,.08); border:1px solid rgba(233,168,60,.28); border-radius:12px; padding:12px 14px}
+  .focus .day{font-family:var(--lat); font-weight:700; color:var(--ko); font-size:14px; flex-shrink:0}
+  .focus .txt{font-size:14px} .focus .txt small{color:var(--mut); display:block; font-size:11.5px; margin-top:1px}
+  .field2{margin-top:10px; font-size:12.5px; color:var(--mut)} .field2 b{color:var(--ink)}
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:15px; padding:15px 15px 12px}
+  .addrow{display:flex; gap:8px; margin-bottom:4px}
+  .addrow input{flex:1; background:#0c2523; border:1px solid var(--line); border-radius:10px; padding:10px 12px; color:var(--ink); font-family:var(--cjk); font-size:13.5px}
+  .addrow input:focus{outline:none; border-color:var(--ko)}
+  .addrow input::placeholder{color:var(--mut)}
+  .add{background:var(--ko); color:#0F2E2B; border:none; border-radius:10px; padding:0 14px; font-weight:700; font-size:18px; cursor:pointer; font-family:var(--lat)}
+  .empty{color:var(--mut); font-size:12.5px; padding:8px 2px}
+  ul.list{list-style:none; margin-top:6px}
+  ul.list li{display:flex; align-items:center; gap:10px; padding:9px 2px; border-bottom:1px solid var(--line)}
+  ul.list li:last-child{border-bottom:0}
+  .chk{width:19px; height:19px; border-radius:6px; border:1.5px solid var(--mut); flex-shrink:0; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:12px; color:#0F2E2B}
+  .chk.on{background:var(--ko); border-color:var(--ko)}
+  .li-txt{flex:1; font-size:14px}
+  .li-txt.done{color:var(--mut); text-decoration:line-through}
+  .li-sub{font-size:11.5px; color:var(--mut)}
+  .del{color:var(--mut); cursor:pointer; font-size:16px; opacity:.5; padding:0 4px; flex-shrink:0}
+  .del:hover{opacity:1; color:var(--goal)}
+  .stat{font-family:var(--cjk); font-size:11px; font-weight:600; padding:4px 10px; border-radius:20px; cursor:pointer; flex-shrink:0; border:none}
+  .s-a{background:rgba(111,184,196,.16); color:var(--en)}
+  .s-b{background:rgba(233,168,60,.16); color:var(--ko)}
+  .s-c{background:rgba(183,156,224,.18); color:var(--pur)}
+  .s-d{background:rgba(234,131,107,.18); color:var(--goal)}
+  .s-e{background:rgba(157,184,177,.16); color:var(--mut)}
+  .hint{font-size:11.5px; color:var(--mut); margin-top:8px}
+  .links{display:flex; flex-wrap:wrap; gap:8px}
+  .links a{font-size:12.5px; color:var(--ink); text-decoration:none; background:var(--panel); border:1px solid var(--line); border-radius:20px; padding:8px 13px}
+  .links a:hover{border-color:var(--ko); color:var(--ko)}
+  .route{display:grid; gap:7px}
+  .route .r{display:flex; gap:8px; font-size:12.5px; align-items:baseline}
+  .route .r .from{color:var(--ink); min-width:96px; flex-shrink:0}
+  .route .r .to{color:var(--mut)} .route .r .to b{color:var(--ko)}
+  footer{margin-top:34px; text-align:center; font-size:11.5px; color:var(--mut); font-family:var(--lat); letter-spacing:.1em}
+  .note{font-size:11.5px; color:var(--mut); text-align:center; margin-top:6px}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="date" id="date">—</div>
+  <h1>안녕, <b>야오</b> 👋 现在做什么？</h1>
+  <div class="focus"><span class="day" id="fday">—</span><span class="txt" id="ftxt">—</span></div>
+  <div class="field2">🏢 公司 = <b>输入战场</b>（闭嘴囤素材·干等时拿去精听） · 🏠 在家 = <b>开口战场</b>（韩语优先）</div>
+</div>
+
+<h2 class="lead">현재 · 今天就做这三件（别超过3）</h2>
+<div class="card">
+  <div class="addrow"><input id="n3in" maxlength="80" placeholder="今天必须推进的一件事…"><button class="add" onclick="addNext3()">＋</button></div>
+  <ul class="list" id="n3list"></ul>
+  <div class="hint">🎯 早上从飞书 + 下面日程挑最多 3 件放这儿。多了就是又乱了。</div>
+</div>
+
+<h2 class="lead">매일 · 每日打卡（每天自动清零）</h2>
+<div class="card"><ul class="list" id="daily"></ul></div>
+
+<h2 class="lead">머릿속 비우기 · 脑子乱？先倒这儿</h2>
+<div class="card">
+  <div class="addrow"><input id="dpin" maxlength="140" placeholder="念头 / 待办 / 担心 / 灵感… 先扔进来"><button class="add" onclick="addDump()">＋</button></div>
+  <ul class="list" id="dplist"></ul>
+  <div class="hint">💭 想到就倒。重要的挑成上面「三件」，写作灵感转进 Obsidian「写作」。</div>
+</div>
+
+<h2 class="lead">🎮 工作项目 · 로컬라이징</h2>
+<div class="card">
+  <div class="addrow"><input id="pjin" maxlength="60" placeholder="项目/游戏名…"><button class="add" onclick="addProj()">＋</button></div>
+  <ul class="list" id="pjlist"></ul>
+  <div class="hint">点状态循环：翻译中 → 校对 → QA → 待客户确认 → 已交付 · 等中文的标「待客户确认」别挂心上</div>
+</div>
+
+<h2 class="lead">✍️ 写作角 & 🏊 本周热爱（每周自动清零）</h2>
+<div class="card"><ul class="list" id="weekly"></ul>
+  <div class="hint">写作只求「本周动过笔」——200字/10分钟就算赢。游泳是奖励，别让"没空"吃掉它。</div>
+</div>
+
+<h2 class="lead">地图 · 快捷入口</h2>
+<div class="links" id="links"></div>
+
+<h2 class="lead">归位规则 · 每样东西的家</h2>
+<div class="card route">
+  <div class="r"><span class="from">灵感·杂念</span><span class="to">→ <b>脑子乱</b>（这儿）</span></div>
+  <div class="r"><span class="from">工作·deadline</span><span class="to">→ <b>飞书</b>，只把"今天要动的"抄进上面三件</span></div>
+  <div class="r"><span class="from">韩语新词·语法</span><span class="to">→ <b>language-notes</b> · Obsidian</span></div>
+  <div class="r"><span class="from">错题·听力盲点</span><span class="to">→ <b>wrong-notes</b> · Obsidian</span></div>
+  <div class="r"><span class="from">写作片段</span><span class="to">→ Obsidian <b>「写作」</b></span></div>
+  <div class="r"><span class="from">求职机会</span><span class="to">→ 缓着看，遇到就丢 <b>脑子乱</b></span></div>
+</div>
+
+<footer>야오의 홈 · 화이팅 ⚔️</footer>
+<div class="note" id="storenote">— 数据保存中 —</div>
+
+<script>
+var hasWS=(typeof window!=='undefined' && window.storage);
+var DB={ get:async function(k){try{if(hasWS){var r=await window.storage.get(k);return r?r.value:null;}return localStorage.getItem(k);}catch(e){return null;}},
+         set:async function(k,v){try{if(hasWS){await window.storage.set(k,v);}else{localStorage.setItem(k,v);}}catch(e){}} };
+async function load(k,def){var raw=await DB.get(k);if(!raw)return def;try{return JSON.parse(raw);}catch(e){return def;}}
+async function save(k,v){await DB.set(k,JSON.stringify(v));}
+function today(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function weekId(){var d=new Date();var o=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));var day=o.getUTCDay()||7;o.setUTCDate(o.getUTCDate()+4-day);var ys=new Date(Date.UTC(o.getUTCFullYear(),0,1));var wn=Math.ceil((((o-ys)/86400000)+1)/7);return o.getUTCFullYear()+'-W'+wn;}
+
+var days=['일','월','화','수','목','금','토'];
+var focus={1:['MON','影子跟读日','쉐도잉：跟白天标记的音频，先看稿→再脱稿'],2:['TUE','视译日','시역：看着中文直接口译成韩语'],3:['WED','复述日','리텔링：听一段用自己的话韩语复述'],4:['THU','视译进阶','시역 + 顺次口译初探'],5:['FRI','自由对话·轻松','纯自由聊，练张嘴反射'],6:['SAT','攻坚日','整篇视译 + 순차통역入门 + 沉浸精听'],0:['SUN','巩固日','清错题本 + 韩语写作小段']};
+(function(){var d=new Date();document.getElementById('date').textContent=today()+' ('+days[d.getDay()]+')';var f=focus[d.getDay()];document.getElementById('fday').textContent=f[0];document.getElementById('ftxt').innerHTML=f[1]+'<small>'+f[2]+'</small>';})();
+
+// editable checklist (next3, dump)
+function makeChecklist(key,listId,opts){var data=[];var el=document.getElementById(listId);
+ async function init(){data=await load(key,[]);render();}
+ function render(){el.innerHTML='';if(!data.length){el.innerHTML='<li class="empty">'+(opts.empty||'空空~')+'</li>';return;}
+  data.forEach(function(it,i){var li=document.createElement('li');
+   var chk=document.createElement('div');chk.className='chk'+(it.done?' on':'');chk.textContent=it.done?'✓':'';chk.onclick=function(){data[i].done=!data[i].done;save(key,data);render();};
+   var tx=document.createElement('div');tx.className='li-txt'+(it.done?' done':'');tx.textContent=it.t;
+   var del=document.createElement('div');del.className='del';del.textContent='×';del.onclick=function(){data.splice(i,1);save(key,data);render();};
+   li.appendChild(chk);li.appendChild(tx);li.appendChild(del);el.appendChild(li);});}
+ init();return{add:function(t){if(!t.trim())return;data.push({t:t.trim(),done:false});save(key,data);render();}};}
+var n3=makeChecklist('nb:next3','n3list',{empty:'今天还没定~ 定 1-3 件就好。'});
+var dp=makeChecklist('nb:dump','dplist',{empty:'脑子清爽着呢✨'});
+function addNext3(){var i=document.getElementById('n3in');n3.add(i.value);i.value='';i.focus();}
+function addDump(){var i=document.getElementById('dpin');dp.add(i.value);i.value='';i.focus();}
+
+// fixed auto-reset checklist (daily / weekly)
+function makeFixed(key,listId,items,period){var el=document.getElementById(listId);var state={};
+ async function init(){var saved=await load(key,null);var stamp=period==='day'?today():weekId();
+   if(!saved||saved.stamp!==stamp){state={};items.forEach(function(it){state[it[0]]=false;});await save(key,{stamp:stamp,state:state});}
+   else{state=saved.state;items.forEach(function(it){if(state[it[0]]===undefined)state[it[0]]=false;});}
+   render();}
+ function render(){el.innerHTML='';items.forEach(function(it){var li=document.createElement('li');
+   var chk=document.createElement('div');chk.className='chk'+(state[it[0]]?' on':'');chk.textContent=state[it[0]]?'✓':'';
+   chk.onclick=async function(){state[it[0]]=!state[it[0]];await save(key,{stamp:(period==='day'?today():weekId()),state:state});render();};
+   var tx=document.createElement('div');tx.className='li-txt'+(state[it[0]]?' done':'');tx.innerHTML=it[1];
+   li.appendChild(chk);li.appendChild(tx);el.appendChild(li);});}
+ init();}
+makeFixed('nb:daily','daily',[['ko','🇰🇷 韩语开口（今天的重点）'],['en','🔤 英语 30min'],['jing','👂 精听 1 小段'],['hui','💖 绘旅人打卡'],['limbus','🎮 Limbus 挂机']],'day');
+makeFixed('nb:weekly','weekly',[['write','✍️ 写作 200 字（本周至少一次）'],['swim','🏊 游泳一次'],['review','📚 周日清错题本']],'week');
+
+// boards
+function makeBoard(key,listId,statuses,render2){var data=[];var el=document.getElementById(listId);
+ async function init(){data=await load(key,[]);render();}
+ function cls(i){return ['s-a','s-b','s-c','s-d','s-e'][i%5];}
+ function render(){el.innerHTML='';if(!data.length){el.innerHTML='<li class="empty">加一个项目开始~</li>';return;}
+  data.forEach(function(it,i){var li=document.createElement('li');
+   var tx=document.createElement('div');tx.className='li-txt';tx.innerHTML=render2(it);
+   var st=document.createElement('button');st.className='stat '+cls(it.s);st.textContent=statuses[it.s];
+   st.onclick=function(){data[i].s=(data[i].s+1)%statuses.length;save(key,data);render();};
+   var del=document.createElement('div');del.className='del';del.textContent='×';del.onclick=function(){data.splice(i,1);save(key,data);render();};
+   li.appendChild(tx);li.appendChild(st);li.appendChild(del);el.appendChild(li);});}
+ init();return{add:function(o){data.push(Object.assign({s:0},o));save(key,data);render();}};}
+var pj=makeBoard('nb:projects','pjlist',['翻译中','校对中','QA','待客户确认','已交付'],function(it){return it.name;});
+function addProj(){var i=document.getElementById('pjin');if(!i.value.trim())return;pj.add({name:i.value.trim()});i.value='';i.focus();}
+
+['n3in','dpin','pjin'].forEach(function(id){document.getElementById(id).addEventListener('keydown',function(e){if(e.key==='Enter'){({n3in:addNext3,dpin:addDump,pjin:addProj})[id]();}});});
+
+var links=[['🗄️ Obsidian','obsidian://open'],['📋 飞书·工作表','https://bcnege18gifk.feishu.cn/wiki/UWOHwgNSMiDGXlka8IWcCIMPncg'],['⚔️ 作战计划表','plan.html'],['📖 反查小抄','cheatsheets.html'],['📊 谷歌表','https://docs.google.com/spreadsheets/u/0/'],['🐙 GitHub','https://github.com/kyszdayao0211-cell/translate-helper'],['✉️ Gmail','https://mail.google.com'],['🎮 Steam','https://store.steampowered.com']];
+(function(){var c=document.getElementById('links');links.forEach(function(l){var a=document.createElement('a');a.textContent=l[0];a.href=l[1];if(l[1]!=='#')a.target='_blank';c.appendChild(a);});})();
+document.getElementById('storenote').textContent=hasWS?'— 数据存在 Claude（部署到 GitHub Pages 后改存本机，跨会话保留）—':'— 数据存在此浏览器 · 打卡每天/每周自动清零 —';
+</script>
+</body>
+</html>

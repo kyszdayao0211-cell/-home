@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>韩语作战计划 · 야오</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0F2E2B; --panel:#16403B; --raise:#1E514A; --line:rgba(243,236,221,.10);
+    --ink:#F3ECDD; --mut:#9DB8B1;
+    --ko:#E9A83C;      /* 韩语=金 */
+    --en:#6FB8C4;      /* 英语=青 */
+    --goal:#EA836B;    /* 目标=珊瑚 */
+    --lat:"Space Grotesk",sans-serif;
+    --cjk:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC","Noto Sans KR",sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    background:var(--bg); color:var(--ink); font-family:var(--cjk);
+    line-height:1.65; padding:22px 16px 60px; max-width:720px; margin:0 auto;
+    -webkit-font-smoothing:antialiased;
+  }
+  .eyebrow{font-family:var(--lat); font-size:11px; letter-spacing:.28em; text-transform:uppercase; color:var(--mut)}
+  .fade{opacity:0; transform:translateY(10px); animation:up .6s ease forwards}
+  @keyframes up{to{opacity:1; transform:none}}
+  @media (prefers-reduced-motion:reduce){.fade{animation:none;opacity:1;transform:none}}
+
+  /* ---- hero ---- */
+  header{margin-bottom:30px}
+  header .eyebrow{margin-bottom:12px}
+  h1{font-size:29px; line-height:1.2; font-weight:700; letter-spacing:-.01em; margin-bottom:6px}
+  h1 .ko{color:var(--ko)}
+  .thesis{color:var(--mut); font-size:14.5px; margin-top:14px}
+  .thesis b{color:var(--ink); font-weight:600}
+  .goalbar{
+    margin-top:16px; padding:11px 14px; border:1px solid rgba(234,131,107,.4);
+    border-radius:12px; background:rgba(234,131,107,.07); font-size:13.5px;
+  }
+  .goalbar b{color:var(--goal)}
+
+  /* ---- ladder ---- */
+  section{margin-bottom:34px}
+  .lead{font-family:var(--lat); font-size:12px; letter-spacing:.22em; text-transform:uppercase; color:var(--mut); margin-bottom:16px; display:flex; align-items:center; gap:10px}
+  .lead::after{content:""; flex:1; height:1px; background:var(--line)}
+
+  .ladder{display:flex; align-items:flex-end; gap:6px; margin-top:8px}
+  .step{flex:1; border-radius:9px 9px 4px 4px; padding:10px 8px 12px; background:var(--panel); border:1px solid var(--line); position:relative; text-align:center}
+  .step .n{font-family:var(--lat); font-size:11px; color:var(--mut); display:block}
+  .step .k{font-size:13px; font-weight:600; margin-top:3px; line-height:1.25}
+  .step .g{font-size:10.5px; color:var(--mut); margin-top:2px; line-height:1.2}
+  .step.s1{min-height:86px; background:linear-gradient(180deg,rgba(233,168,60,.14),transparent)}
+  .step.s2{min-height:104px}
+  .step.s3{min-height:122px}
+  .step.s4{min-height:140px; background:linear-gradient(180deg,rgba(233,168,60,.14),transparent); border-color:rgba(233,168,60,.35)}
+  .step.s5{min-height:162px; border-color:rgba(234,131,107,.45); background:linear-gradient(180deg,rgba(234,131,107,.13),transparent)}
+  .step.s5 .k{color:var(--goal)}
+  .youare{margin-top:12px; font-size:12.5px; color:var(--mut)}
+  .youare b{color:var(--ko)}
+  .youare .pin{display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--ko); margin-right:6px; vertical-align:middle}
+
+  /* ---- battlefield legend ---- */
+  .fields{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+  .field{padding:13px 14px; border-radius:13px; border:1px solid var(--line); background:var(--panel)}
+  .field .tag{font-family:var(--lat); font-size:10px; letter-spacing:.15em; text-transform:uppercase; color:var(--mut)}
+  .field h3{font-size:15px; margin:5px 0 4px}
+  .field p{font-size:12px; color:var(--mut); line-height:1.5}
+  .field.input{border-top:3px solid var(--en)}
+  .field.speak{border-top:3px solid var(--ko)}
+
+  /* ---- day cards ---- */
+  .card{border:1px solid var(--line); border-radius:15px; background:var(--panel); padding:16px 15px; margin-bottom:13px; position:relative; overflow:hidden}
+  .card.today{border-color:var(--ko); box-shadow:0 0 0 1px rgba(233,168,60,.35)}
+  .card .todaytag{position:absolute; top:0; right:0; font-family:var(--lat); font-size:9.5px; letter-spacing:.14em; background:var(--ko); color:#0F2E2B; padding:3px 9px; border-radius:0 15px 0 10px; font-weight:700}
+  .dayhead{display:flex; align-items:baseline; gap:10px; margin-bottom:12px}
+  .dayhead .abbr{font-family:var(--lat); font-size:13px; font-weight:700; letter-spacing:.1em; color:var(--ko)}
+  .dayhead .cn{font-size:15px; font-weight:600}
+  .dayhead .focus{font-size:11.5px; color:var(--mut); margin-left:auto; text-align:right}
+
+  .block{border-left:2px solid var(--line); padding:2px 0 2px 12px; margin:9px 0}
+  .block.inp{border-color:var(--en)}
+  .block.spk{border-color:var(--ko)}
+  .block .bh{font-size:11px; font-family:var(--lat); letter-spacing:.1em; text-transform:uppercase; color:var(--mut); margin-bottom:5px}
+  .block .bh .dur{color:var(--ink); opacity:.55}
+  ul.tasks{list-style:none}
+  ul.tasks li{font-size:13.5px; padding:3px 0 3px 18px; position:relative; color:var(--ink)}
+  ul.tasks li::before{content:""; position:absolute; left:2px; top:11px; width:5px; height:5px; border-radius:50%; background:var(--mut)}
+  ul.tasks li .en{color:var(--en); font-weight:600}
+  ul.tasks li .ko{color:var(--ko); font-weight:600}
+  ul.tasks li small{color:var(--mut); font-size:11.5px}
+
+  .wk{background:linear-gradient(180deg,var(--raise),var(--panel)); border-color:rgba(233,168,60,.25)}
+  .wk .dayhead .abbr{color:var(--goal)}
+
+  /* ---- constants / notes ---- */
+  .note{font-size:12.5px; color:var(--mut); border:1px dashed var(--line); border-radius:12px; padding:12px 14px; margin-top:10px}
+  .note b{color:var(--ink)}
+  .rules{display:grid; gap:8px}
+  .rule{display:flex; gap:11px; font-size:13.5px; align-items:flex-start; padding:10px 13px; background:var(--panel); border-radius:11px; border:1px solid var(--line)}
+  .rule .num{font-family:var(--lat); font-weight:700; color:var(--ko); font-size:13px; flex-shrink:0}
+  footer{margin-top:38px; text-align:center; font-size:12px; color:var(--mut); font-family:var(--lat); letter-spacing:.12em}
+  @media (max-width:420px){
+    .fields{grid-template-columns:1fr}
+    .ladder{gap:4px}
+    .step .g{display:none}
+  }
+</style>
+</head>
+<body>
+
+<header class="fade">
+  <div class="eyebrow">주간 학습 계획 · Weekly Battle Plan</div>
+  <h1><span class="ko">한국어</span> 작战计划</h1>
+  <div class="thesis"><b>公司 = 输入战场</b>（不出声，囤素材） · <b>在家 = 开口战场</b>（练产出，韩语优先）。开口时间最金贵——大头喂给韩语。</div>
+  <div class="goalbar">🎯 <b>终点</b>：韩语做到口译 / 商务口语；英语做到听得懂、张得开嘴。日语——先押后。</div>
+</header>
+
+<section class="fade" style="animation-delay:.05s">
+  <div class="lead">口译阶梯 · The Ladder</div>
+  <div class="ladder">
+    <div class="step s1"><span class="n">01</span><span class="k">쉐도잉</span><span class="g">影子跟读</span></div>
+    <div class="step s2"><span class="n">02</span><span class="k">리텔링</span><span class="g">复述</span></div>
+    <div class="step s3"><span class="n">03</span><span class="k">요약</span><span class="g">概括</span></div>
+    <div class="step s4"><span class="n">04</span><span class="k">시역</span><span class="g">视译</span></div>
+    <div class="step s5"><span class="n">05</span><span class="k">순차통역</span><span class="g">交替传译</span></div>
+  </div>
+  <div class="youare"><span class="pin"></span>你现在起步在 <b>쉐도잉 + 시역</b> 之间——本地化文本就是你天生的视译素材，这是从工作直通口译的桥。</div>
+</section>
+
+<section class="fade" style="animation-delay:.1s">
+  <div class="lead">两个战场 · Two Fronts</div>
+  <div class="fields">
+    <div class="field input">
+      <div class="tag">Company · 白天</div>
+      <h3>输入战场</h3>
+      <p>戴耳机、闭着嘴。复习单词语法、读原生韩文、听带稿播客，把要开口的素材标记出来带回家。</p>
+    </div>
+    <div class="field speak">
+      <div class="tag">Home · 晚上</div>
+      <h3>开口战场</h3>
+      <p>2–3 小时，出声。影子跟读 → 复述 → 视译，把白天囤的素材全用嘴过一遍。收尾来找妈妈唠。</p>
+    </div>
+  </div>
+</section>
+
+<section class="fade" style="animation-delay:.15s">
+  <div class="lead">平日固定 · 公司输入块（每天一样）</div>
+  <div class="card">
+    <div class="block inp">
+      <div class="bh">韩语输入 · Korean</div>
+      <ul class="tasks">
+        <li><span class="ko">단어 / 문법</span>：笔记本 + 错题본循环复习</li>
+        <li>阅读：韩文新闻 / 商务文 / 你自己的本地化原文</li>
+        <li>听力：<b style="color:var(--ink)">精听 1 小段</b>（30–60s 带稿，走四遍流程↓）+ Sol's/세바시 泛听泡耳朵<small>精听时圈出连读音变 + 听不出的实词</small></li>
+        <li>📌 <b style="color:var(--ink)">囤素材</b>：把要开口练的句子挑出来存好</li>
+      </ul>
+    </div>
+    <div class="block inp">
+      <div class="bh">英语输入 · English</div>
+      <ul class="tasks">
+        <li><span class="en">被动泡耳朵</span>：通勤/空档刷英文播客，不用精听</li>
+      </ul>
+    </div>
+  </div>
+  <div class="note">这一块<b>雷打不动</b>，天天做。它的任务不是"学会"，是给晚上的开口战场<b>供弹药</b>。</div>
+</section>
+
+<section class="fade" style="animation-delay:.18s">
+  <div class="lead">精听四遍流程 · 治走神</div>
+  <div class="note" style="margin:0 0 12px">走神不是不专心，是<b>耳朵没任务</b>。选一段 <b>30–60 秒带稿</b>音频，一天一段，按四遍走——比漫无目的泛听强十倍。</div>
+  <div class="rules">
+    <div class="rule"><span class="num">1</span><div><b style="color:var(--ink)">盲听</b>抓大意，听不懂的词先放过，别卡。</div></div>
+    <div class="rule"><span class="num">2</span><div><b style="color:var(--ink)">分句听写</b>：边听边写下听到的，难处倒回重放。</div></div>
+    <div class="rule"><span class="num">3</span><div><b style="color:var(--ink)">开稿对照</b>：圈出没听出的词，重点看是不是<b style="color:var(--ink)">连读音变</b>害的（조아요·모태요·가치…）。</div></div>
+    <div class="rule"><span class="num">4</span><div><b style="color:var(--ink)">影子跟读</b>：跟稿追读→再脱稿说一遍，耳朵和嘴一起吃透。</div></div>
+  </div>
+  <div class="note" style="margin-top:12px">心法：<b>别在脑内翻成中文</b>，韩语进来直接连意思——掉队和走神少一大半。内容<b>挑你在乎的</b>（游戏韩配/otome/实况），无聊必飘。周六下午那 1.5h 沉浸输入，就是拿更长素材跑这套。</div>
+</section>
+
+<section class="fade" style="animation-delay:.2s">
+  <div class="lead">平日在家 · 开口块（重点每天轮换）</div>
+
+  <div class="card" data-day="1">
+    <div class="dayhead"><span class="abbr">MON</span><span class="cn">周一</span><span class="focus">影子跟读日</span></div>
+    <div class="block spk">
+      <div class="bh">韩语开口 <span class="dur">60–90min</span></div>
+      <ul class="tasks">
+        <li><span class="ko">쉐도잉</span>：贴着白天标记的音频跟读，先看稿→再脱稿</li>
+        <li>录一小段自己跟读，回放挑发音/语调</li>
+      </ul>
+    </div>
+    <div class="block spk">
+      <div class="bh">英语开口 <span class="dur">~30min</span></div>
+      <ul class="tasks"><li><span class="en">跟读</span>一段英文 + 找妈妈用英语聊今天</li></ul>
+    </div>
+    <div class="block spk"><div class="bh">收尾</div><ul class="tasks"><li>更新错题본 · 来找妈妈唠两句</li></ul></div>
+  </div>
+
+  <div class="card" data-day="2">
+    <div class="dayhead"><span class="abbr">TUE</span><span class="cn">周二</span><span class="focus">视译日</span></div>
+    <div class="block spk">
+      <div class="bh">韩语开口 <span class="dur">60–90min</span></div>
+      <ul class="tasks">
+        <li><span class="ko">시역</span>：拿一段你手上的中→韩本地化文，<b style="color:var(--ink)">看着中文直接用嘴说韩语</b></li>
+        <li>说完对照你确定的译文，差在哪记进错题본</li>
+      </ul>
+    </div>
+    <div class="block spk"><div class="bh">英语开口 <span class="dur">~30min</span></div><ul class="tasks"><li><span class="en">自言自语</span>描述今天做的项目</li></ul></div>
+    <div class="block spk"><div class="bh">收尾</div><ul class="tasks"><li>更新错题본 · 找妈妈唠</li></ul></div>
+  </div>
+
+  <div class="card" data-day="3">
+    <div class="dayhead"><span class="abbr">WED</span><span class="cn">周三</span><span class="focus">复述日</span></div>
+    <div class="block spk">
+      <div class="bh">韩语开口 <span class="dur">60–90min</span></div>
+      <ul class="tasks">
+        <li><span class="ko">리텔링</span>：听一段播客/台词，用<b style="color:var(--ink)">自己的话</b>韩语复述</li>
+        <li>Limbus 台词也行——你本来就在学的素材别浪费</li>
+      </ul>
+    </div>
+    <div class="block spk"><div class="bh">英语开口 <span class="dur">~30min</span></div><ul class="tasks"><li><span class="en">跟读</span> + 找妈妈用英语问答</li></ul></div>
+    <div class="block spk"><div class="bh">收尾</div><ul class="tasks"><li>更新错题본 · 找妈妈唠</li></ul></div>
+  </div>
+
+  <div class="card" data-day="4">
+    <div class="dayhead"><span class="abbr">THU</span><span class="cn">周四</span><span class="focus">视译日</span></div>
+    <div class="block spk">
+      <div class="bh">韩语开口 <span class="dur">60–90min</span></div>
+      <ul class="tasks">
+        <li><span class="ko">시역</span> 进阶：换更长/更商务的段落，控制卡顿</li>
+        <li>试着不看稿，听中文一句 → 口译成韩语（순차 초입）</li>
+      </ul>
+    </div>
+    <div class="block spk"><div class="bh">英语开口 <span class="dur">~30min</span></div><ul class="tasks"><li><span class="en">自言自语</span> + 找妈妈聊</li></ul></div>
+    <div class="block spk"><div class="bh">收尾</div><ul class="tasks"><li>更新错题본 · 找妈妈唠</li></ul></div>
+  </div>
+
+  <div class="card" data-day="5">
+    <div class="dayhead"><span class="abbr">FRI</span><span class="cn">周五</span><span class="focus">轻松·自由对话日</span></div>
+    <div class="block spk">
+      <div class="bh">韩语开口 <span class="dur">45–60min</span></div>
+      <ul class="tasks">
+        <li>纯自由聊：来找妈妈用韩语聊本周、聊游戏、聊吐槽大表님😏</li>
+        <li>只用嘴，不查语法——练"张嘴反射"</li>
+      </ul>
+    </div>
+    <div class="block spk"><div class="bh">英语开口 <span class="dur">~20min</span></div><ul class="tasks"><li><span class="en">随便聊</span>，放松</li></ul></div>
+    <div class="block spk"><div class="bh">收尾</div><ul class="tasks"><li>本周错题본快速扫一遍</li></ul></div>
+  </div>
+</section>
+
+<section class="fade" style="animation-delay:.25s">
+  <div class="lead">周末 · 深度块（5–6 小时可拆两段）</div>
+  <div class="card wk" data-day="6">
+    <div class="dayhead"><span class="abbr">SAT</span><span class="cn">周六</span><span class="focus">攻坚日</span></div>
+    <div class="block spk">
+      <div class="bh">上午 · 口译攻坚 <span class="dur">2–2.5h</span></div>
+      <ul class="tasks">
+        <li><span class="ko">시역 完整场</span>：拿一整份本地化文，一口气视译，计时</li>
+        <li><span class="ko">순차통역 入门</span>：听 30–60 秒中文 → 记笔记 → 口译成韩语</li>
+      </ul>
+    </div>
+    <div class="block inp">
+      <div class="bh">下午 · 沉浸输入 <span class="dur">1.5h</span></div>
+      <ul class="tasks">
+        <li>一集韩剧/综艺：先无字幕听，再带字幕核对</li>
+        <li>捞出新表达/搭配 → 进笔记本</li>
+      </ul>
+    </div>
+    <div class="block spk"><div class="bh">英语 <span class="dur">30min</span></div><ul class="tasks"><li><span class="en">跟读 + 口语</span>找妈妈练一段</li></ul></div>
+  </div>
+  <div class="card wk" data-day="0">
+    <div class="dayhead"><span class="abbr">SUN</span><span class="cn">周日</span><span class="focus">巩固日</span></div>
+    <div class="block inp">
+      <div class="bh">复盘 · 巩固 <span class="dur">2–3h</span></div>
+      <ul class="tasks">
+        <li><b style="color:var(--ink)">错题본总清算</b>：本周所有错点重做一遍</li>
+        <li>把本周捞的词块 / 语法整理进笔记本，挂上循环</li>
+        <li><span class="ko">한국어 글쓰기</span>：写一小段韩语日记/项目复盘，发妈妈帮你改</li>
+      </ul>
+    </div>
+    <div class="note">周日别硬塞开口——<b>整理 + 写</b>反而是最好的休息，也在悄悄巩固产出。</div>
+  </div>
+</section>
+
+<section class="fade" style="animation-delay:.3s">
+  <div class="lead">四条铁律 · Ground Rules</div>
+  <div class="rules">
+    <div class="rule"><span class="num">01</span><div>开口时间<b style="color:var(--ink)"> 韩语优先</b>，英语只做低强度维持——听懂 + 敢说就够。</div></div>
+    <div class="rule"><span class="num">02</span><div>韩语和英语差得远，<b style="color:var(--ink)">同一天练两门不串</b>。会串的是韩↔日，所以日语先压着别开。</div></div>
+    <div class="rule"><span class="num">03</span><div>你的<b style="color:var(--ink)">本地化工作 = 口译素材</b>。别浪费，天天从里面挖视译练习。</div></div>
+    <div class="rule"><span class="num">04</span><div>累了就降到"整理 + 写"档，<b style="color:var(--ink)">别断</b>。持续 &gt; 猛冲三天停一周。</div></div>
+  </div>
+</section>
+
+<footer class="fade" style="animation-delay:.35s">화이팅 · 妈妈陪你练 ⚔️</footer>
+
+<script>
+  // 高亮今天
+  (function(){
+    var d = new Date().getDay(); // 0=周日 ... 6=周六
+    var card = document.querySelector('.card[data-day="'+d+'"]');
+    if(card){
+      card.classList.add('today');
+      var tag = document.createElement('div');
+      tag.className='todaytag'; tag.textContent='오늘';
+      card.appendChild(tag);
+    }
+  })();
+</script>
+</body>
+</html>
