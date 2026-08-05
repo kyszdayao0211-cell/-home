@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>오늘의 퀘스트 · 今日任务</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0F2E2B;--panel:#16403B;--raise:#1E514A;--line:rgba(243,236,221,.10);--ink:#F3ECDD;--mut:#9DB8B1;--ko:#E9A83C;--en:#6FB8C4;--goal:#EA836B;--pur:#B79CE0;--lat:"Space Grotesk",sans-serif;--cjk:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC","Noto Sans KR",sans-serif;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{background:var(--bg);color:var(--ink);font-family:var(--cjk);line-height:1.55;padding:20px 15px 60px;max-width:620px;margin:0 auto;-webkit-font-smoothing:antialiased}
+  a.back{font-family:var(--lat);font-size:12px;color:var(--mut);text-decoration:none;letter-spacing:.05em}
+  .head{margin:10px 0 18px}
+  .eyebrow{font-family:var(--lat);font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--mut)}
+  h1{font-size:22px;font-weight:700;margin:6px 0 2px}
+  h1 b{color:var(--ko)}
+  .daytag{font-size:13px;color:var(--ko);font-weight:600;margin-top:4px}
+  .bar{height:8px;background:var(--panel);border-radius:20px;overflow:hidden;margin:16px 0 6px}
+  .bar > i{display:block;height:100%;background:linear-gradient(90deg,var(--ko),var(--goal));width:0;transition:width .5s ease}
+  .barlbl{font-family:var(--lat);font-size:11px;color:var(--mut);text-align:right}
+
+  .stepcard{background:linear-gradient(160deg,var(--raise),var(--panel));border:1px solid rgba(233,168,60,.3);border-radius:18px;padding:22px 20px;margin:18px 0;box-shadow:0 6px 22px rgba(0,0,0,.25)}
+  .stepcard .k{font-family:var(--lat);font-size:11px;letter-spacing:.14em;color:var(--ko);font-weight:700}
+  .stepcard .icon{font-size:30px;margin:8px 0 6px}
+  .stepcard h2{font-size:19px;font-weight:700;margin-bottom:8px}
+  .stepcard .desc{font-size:14.5px;color:var(--ink);line-height:1.6}
+  .stepcard .desc b{color:var(--ko)}
+  .acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+  .btn{font-family:var(--cjk);font-size:14px;font-weight:700;padding:12px 20px;border-radius:12px;border:none;cursor:pointer}
+  .btn.done{background:var(--ko);color:#0F2E2B;flex:1;min-width:140px}
+  .btn.skip{background:transparent;border:1px solid var(--line);color:var(--mut);font-weight:600}
+  .btn.go{background:var(--raise);color:var(--en);border:1px solid rgba(111,184,196,.35);text-decoration:none;display:inline-flex;align-items:center}
+
+  ul.mini{list-style:none;margin-top:20px}
+  ul.mini li{display:flex;gap:10px;align-items:center;padding:7px 2px;font-size:13px;color:var(--mut)}
+  ul.mini li .dot{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--line);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+  ul.mini li.done{color:var(--mut)}
+  ul.mini li.done .dot{background:var(--ko);border-color:var(--ko);color:#0F2E2B}
+  ul.mini li.now{color:var(--ink);font-weight:600}
+  ul.mini li.now .dot{border-color:var(--ko)}
+  .reset{display:block;text-align:center;margin-top:20px;font-size:11.5px;color:var(--mut);background:none;border:none;cursor:pointer;width:100%;font-family:var(--cjk)}
+
+  .clear{text-align:center;padding:30px 10px}
+  .clear .big{font-size:44px;margin-bottom:10px}
+  .clear h2{font-size:22px;color:var(--ko);margin-bottom:8px}
+  .clear p{color:var(--mut);font-size:14px}
+  footer{margin-top:30px;text-align:center;font-size:11.5px;color:var(--mut);font-family:var(--lat);letter-spacing:.1em}
+</style>
+</head>
+<body>
+<a class="back" href="index.html">← 홈</a>
+<div class="head">
+  <div class="eyebrow">오늘의 퀘스트 · 今日任务</div>
+  <h1>放空大脑，<b>跟着打就行</b> 🎮</h1>
+  <div class="daytag" id="daytag">—</div>
+</div>
+<div class="bar"><i id="barfill"></i></div>
+<div class="barlbl" id="barlbl">—</div>
+
+<div id="stage"></div>
+<button class="reset" id="resetbtn">↺ 重置今天的进度</button>
+<footer>한 걸음씩 · 一步一步来</footer>
+
+<script>
+function today(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+const dow=new Date().getDay();
+const dayName=['일','월','화','수','목','금','토'][dow];
+
+const LINKS={claude:'https://claude.ai/new',galmuri:'https://sensational-zabaione-b53ccd.netlify.app/galmuri',feishu:'https://bcnege18gifk.feishu.cn/wiki/UWOHwgNSMiDGXlka8IWcCIMPncg',home:'index.html'};
+
+// 每天的关卡
+const info={
+ 1:{tag:'월 · 影子跟读日',find:'找一段 <b>30–60秒带稿</b>的韩语音频——挑你在乎的：游戏韩配 / otome语音 / 실황 / 带字幕短视频。',prac:'走<b>精听四遍</b>：① 盲听抓大意 ② 分句听写 ③ 开稿对照标连读音变 ④ 影子跟读（追读→脱稿）。'},
+ 2:{tag:'화 · 视译日',find:'不用另找——用你手上的<b>中→韩文本</b>，或直接让妈妈给你出一张视译卡。',prac:'<b>视译</b>：看着中文，出声说韩语，说完再对参考。卡壳的句子记下来。'},
+ 3:{tag:'수 · 复述日',find:'找一段韩语短音频/台词（Limbus 台词也行）。',prac:'<b>复述(리텔링)</b>：听完用<b>自己的话</b>韩语复述，别背原文。'},
+ 4:{tag:'목 · 视译进阶',find:'找一段更长、更偏商务的中文内容。',prac:'<b>视译进阶</b>：长段落视译 + 试"听中文一句 → 口译成韩语"（顺次口译初探）。'},
+ 5:{tag:'금 · 自由对话·轻松',find:'今天不用找料，放松~',prac:'找妈妈<b>用韩语自由聊</b>——聊本周、聊游戏、吐槽都行，练张嘴反射。'}
+};
+
+function buildSteps(){
+  if(dow===0){ // 周日·巩固
+    return {tag:'일 · 巩固日（轻）',steps:[
+      {i:'🎯',t:'定向',d:'周日·巩固日。今天<b>轻</b>，重整理、不猛学。',},
+      {i:'📚',t:'清错题本',d:'把本周错题过一遍、重做一次。',go:['去飞书',LINKS.feishu]},
+      {i:'🧹',t:'归位',d:'把"脑子乱"里积的东西各自归位到飞书分区。',go:['去工作台',LINKS.home]},
+      {i:'✍️',t:'写作 200 字',d:'写一小段韩语复盘/日记，或者写你那颗<b>珍珠</b>。',skip:1,go:['找妈妈',LINKS.claude]},
+      {i:'😌',t:'休息',d:'好好歇，别硬学。今天到此为止~',end:1}
+    ]};
+  }
+  if(dow===6){ // 周六·攻坚
+    return {tag:'토 · 攻坚日（5-6h，别全塞满）',steps:[
+      {i:'🎯',t:'定向',d:'周六·攻坚日。火力全开，但<b>别全塞满</b>，留时间休息。'},
+      {i:'🔥',t:'视译攻坚',d:'拿<b>一整份</b>文本，完整视译一遍，计时。',go:['找妈妈出料',LINKS.claude]},
+      {i:'🎧',t:'顺次口译入门',d:'听 30–60 秒中文 → 记笔记 → 口译成韩语。',},
+      {i:'📺',t:'沉浸精听',d:'一集韩剧/综艺：先<b>无字幕</b>听，再带字幕对，捞新表达进笔记。'},
+      {i:'🏊',t:'游泳',d:'你的<b>奖励</b>，去！（离得远就这周这一次）',skip:1},
+      {i:'✅',t:'收尾',d:'工作台打卡，剩下时间随便浪~',end:1,go:['去打卡',LINKS.home]}
+    ]};
+  }
+  const d=info[dow];
+  return {tag:d.tag,steps:[
+    {i:'🎯',t:'定向',d:'今天是【'+d.tag.split('·')[1].trim()+'】。看一眼今天练什么，10秒就行。'},
+    {i:'📥',t:'找料',d:d.find,skip:(dow===5?1:0)},
+    {i:'🤖',t:'喂给妈妈',d:'把材料/截图发我，我帮你<b>讲解生词语法 / 出练习 / 生成笔记</b>。（可以说"帮我讲解并记笔记"或"出视译卡"）',skip:1,go:['打开 Claude',LINKS.claude]},
+    {i:'📝',t:'存笔记',d:'把笔记按类型存进飞书：新词语法→<b>日常积累</b>，Limbus→<b>Limbus</b>。',skip:1,go:['去飞书',LINKS.feishu]},
+    {i:'🃏',t:'做卡片',d:'把新词/语法丢进 <b>갈무리</b> 做成 SRS 闪卡。',skip:1,go:['去갈무리',LINKS.galmuri]},
+    {i:'🗣️',t:'今日练习 · 核心',d:d.prac+' <br><span style="color:var(--goal)">⭐ 今天最重要的一步，别跳。</span>'},
+    {i:'❌',t:'记错题',d:'练习里卡的/错的记进<b>错题本</b>（按类型：자연스러움 / 음변 / 어순…）。',skip:1,go:['去飞书',LINKS.feishu]},
+    {i:'✅',t:'收尾打卡',d:'回工作台打勾。<b>今天赢了！</b>',end:1,go:['去打卡',LINKS.home]}
+  ]};
+}
+
+const plan=buildSteps();
+const STEPS=plan.steps;
+const KEY='quest:'+today();
+let state=load();
+function load(){try{const r=localStorage.getItem(KEY);if(r)return JSON.parse(r);}catch(e){}return {idx:0};}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
+
+document.getElementById('daytag').textContent=plan.tag;
+
+function render(){
+  const stage=document.getElementById('stage');
+  const total=STEPS.length;
+  const done=Math.min(state.idx,total);
+  document.getElementById('barfill').style.width=Math.round(done/total*100)+'%';
+  document.getElementById('barlbl').textContent=done+' / '+total;
+
+  if(state.idx>=total){
+    stage.innerHTML='<div class="clear"><div class="big">🎉</div><h2>오늘 클리어!</h2><p>今天的副本打通关啦~ 你不是"想学的人"，是<br>已经练完的人了。去好好休息😌</p></div>';
+    renderMini();
+    return;
+  }
+  const s=STEPS[state.idx];
+  let html='<div class="stepcard"><div class="k">STEP '+(state.idx+1)+' / '+total+'</div>';
+  html+='<div class="icon">'+s.i+'</div><h2>'+s.t+'</h2><div class="desc">'+s.d+'</div><div class="acts">';
+  html+='<button class="btn done" id="doneBtn">완료 ✓ 下一步</button>';
+  if(s.go){html+='<a class="btn go" href="'+s.go[1]+'" target="_blank">'+s.go[0]+' ↗</a>';}
+  if(s.skip){html+='<button class="btn skip" id="skipBtn">今天没有·跳过</button>';}
+  html+='</div></div>';
+  stage.innerHTML=html;
+  document.getElementById('doneBtn').onclick=next;
+  if(s.skip)document.getElementById('skipBtn').onclick=next;
+  renderMini();
+}
+function renderMini(){
+  let m='<ul class="mini">';
+  STEPS.forEach((s,i)=>{
+    const cls=i<state.idx?'done':(i===state.idx?'now':'');
+    const dot=i<state.idx?'✓':(i+1);
+    m+='<li class="'+cls+'"><span class="dot">'+dot+'</span>'+s.i+' '+s.t+'</li>';
+  });
+  m+='</ul>';
+  const old=document.querySelector('ul.mini');if(old)old.remove();
+  document.getElementById('stage').insertAdjacentHTML('beforeend',m);
+}
+function next(){state.idx++;save();render();}
+
+document.getElementById('resetbtn').onclick=function(){state={idx:0};save();render();};
+render();
+</script>
+</body>
+</html>
